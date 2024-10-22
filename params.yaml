@@ -7,4 +7,4 @@ train:
 
 preprocessing:
   target: price
-  features: [area, bedrooms, bathrooms, stories, parking]
+  features: [area, bedrooms, bathrooms, stories, parking, furnishingstatus]
