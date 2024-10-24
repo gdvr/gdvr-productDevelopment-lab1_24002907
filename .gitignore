@@ -3,7 +3,5 @@ __pycache__/
 *pkl
 .dvc/cache
 .dvc/tmp
-/data/
 !.gitignore.dvc
-/data
 !data.dvc
