@@ -4,7 +4,22 @@ train:
   RANDOM_STATE: 2024
   CV: 5
   alpha: 0.1
-
 preprocessing:
   target: price
-  features: [area, bedrooms, bathrooms, stories, parking, furnishingstatus]
+  features:
+  - area
+  - bedrooms
+  - bathrooms
+  - stories
+  - parking
+  - furnishingstatus
+continuas:
+- area
+- price
+discretas:
+- bedrooms
+- bathrooms
+- stories
+- parking
+categoricas:
+- furnishingstatus
