@@ -6,9 +6,6 @@ import yaml
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import train_test_split
 
-
-from utils.common import categorizeColumns, createPipeline, detectInvalidValues, handlingEmptyValues, splitValuesForModel
-
 def train(input_file, model_file, params_file):
     # Cargar el dataset limpio
     df = pd.read_csv(input_file)
@@ -21,25 +18,16 @@ def train(input_file, model_file, params_file):
     features = params['preprocessing']['features']
     target = params['preprocessing']['target']
 
-    
-
     X = df[features]
     y = df[target]
 
-    continuas, discretas, categoricas = categorizeColumns(df[features])
-
-
-    detectInvalidValues( df[features])
-    handlingEmptyValues(df[features].copy(),continuas + discretas)
-
-
-    model = createPipeline(categoricas,Ridge(alpha=params['train']['alpha']))
-
     # Dividir en conjuntos de entrenamiento y prueba
-    X_train, y_train,X_test,y_test,X_val, y_val = splitValuesForModel(X,y,params['train']['TEST_SIZE'],params['train']['VALIDATE_SIZE'],params['train']['RANDOM_STATE'])
-    
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=params['train']['test_size'], random_state=params['train']['random_state']
+    )
+
     # Entrenar el modelo
-    #model = Ridge(alpha=params['train']['alpha'])
+    model = Ridge(alpha=params['train']['alpha'])
     model.fit(X_train, y_train)
 
     # Guardar el modelo entrenado

@@ -1,0 +1,15 @@
+stages:
+  preprocess:
+    cmd: python .\src\preprocess.py .\data\data.csv data/clean_data.csv params.yaml
+    deps:
+    - .\data\data.csv
+    - params.yaml
+    outs:
+    - data/clean_data.csv
+  transform:
+    cmd: python src/transform.py data/clean_data.csv data/transformed_data.csv params.yaml
+    deps:
+    - data/clean_data.csv
+    - params.yaml
+    outs:
+    - data/transformed_data.csv
