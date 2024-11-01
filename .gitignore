@@ -1,9 +1,5 @@
+.dvc/cache
+.dvc/tmp
 models/
 __pycache__/
 *pkl
-.dvc/cache
-.dvc/tmp
-/data/
-!.gitignore.dvc
-/data
-!data.dvc

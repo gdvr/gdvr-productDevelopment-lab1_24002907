@@ -4,7 +4,33 @@ train:
   RANDOM_STATE: 2024
   CV: 5
   alpha: 0.1
-
 preprocessing:
   target: price
-  features: [area, bedrooms, bathrooms, stories, parking]
+  features:
+  - area
+  - bedrooms
+  - bathrooms
+  - stories
+  - mainroad
+  - guestroom
+  - basement
+  - hotwaterheating
+  - airconditioning
+  - parking
+  - prefarea
+  - furnishingstatus
+continuas:
+- area
+discretas:
+- bedrooms
+- bathrooms
+- stories
+- parking
+categoricas:
+- mainroad
+- guestroom
+- basement
+- hotwaterheating
+- airconditioning
+- prefarea
+- furnishingstatus
