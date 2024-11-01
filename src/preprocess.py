@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 import yaml
 
-from utils.common import categorizeColumns, detectInvalidValues, handlingEmptyValues, splitValuesForModel
+from utils.common import categorizeColumns,  detectInvalidValues, handlingEmptyValues
 
 def preprocess(input_file, output_file, features, target):
     df = pd.read_csv(input_file)
@@ -11,20 +11,10 @@ def preprocess(input_file, output_file, features, target):
     columns = features + [target]
     df = df[columns]
 
-    continuas, discretas, categoricas = categorizeColumns(df)
-    detectInvalidValues( df[columns])
+    continuas, discretas, categoricas = categorizeColumns(df[features])
+    detectInvalidValues(df[columns])
     handlingEmptyValues(df[columns].copy(),continuas + discretas)
 
-    X = df[features]
-    y = df[target]
-    X_train, y_train,X_test,y_test,X_val, y_val = splitValuesForModel(X,y,params['train']['TEST_SIZE'],params['train']['VALIDATE_SIZE'],params['train']['RANDOM_STATE'])
-    X_train[target] = y_train
-    X_test[target] = y_test
-    X_val[target] = y_val
-
-    X_train.to_csv("data/X_train.csv", index=False)
-    X_test.to_csv("data/X_test.csv", index=False)
-    X_val.to_csv("data/X_val.csv", index=False)
 
     df.to_csv(output_file, index=False)
     print(f"Preprocesamiento completado. Datos guardados en {output_file}")
@@ -44,9 +34,12 @@ if __name__ == "__main__":
     with open(params_file) as f:
         params = yaml.safe_load(f)
     
-    print(params)
-
     features = params['preprocessing']['features']
     target = params['preprocessing']['target']
 
-    preprocess(input_file, output_file, features, target)
+    try:
+        preprocess(input_file, output_file, features, target)
+        sys.exit(0)  # Success
+    except Exception as e:
+        print(f"An error occurred during preprocessing: {e}")
+        sys.exit(1)  # Error

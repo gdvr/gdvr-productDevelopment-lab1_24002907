@@ -4,6 +4,8 @@ train:
   RANDOM_STATE: 2024
   CV: 5
   alpha: 0.1
+feature_engineering:
+  top_n_features: 10
 preprocessing:
   target: price
   features:
@@ -11,15 +13,34 @@ preprocessing:
   - bedrooms
   - bathrooms
   - stories
+  - mainroad
+  - guestroom
+  - basement
+  - hotwaterheating
+  - airconditioning
   - parking
+  - prefarea
   - furnishingstatus
 continuas:
 - area
-- price
 discretas:
 - bedrooms
 - bathrooms
 - stories
 - parking
 categoricas:
+- mainroad
+- guestroom
+- basement
+- hotwaterheating
+- airconditioning
+- prefarea
 - furnishingstatus
+RandomForest:
+  n_estimators: 211
+  max_depth: 19
+  min_samples_split: 9
+GradientBoosting:
+  learning_rate: 0.2529735744079543
+  n_estimators: 180
+  max_depth: 3
