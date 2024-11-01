@@ -1,4 +1,0 @@
-[core]
-    remote = localremote_db
-['remote "localremote_db"']
-    url = ../database_simulated
