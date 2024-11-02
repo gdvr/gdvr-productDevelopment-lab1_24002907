@@ -1,8 +1,8 @@
 stages:
-  preprocess:
-    cmd: python .\src\preprocess.py .\data\data.csv data/clean_data.csv params.yaml
+  prepro:
+    cmd: python src/preprocess.py data/data.csv data/clean_data.csv params.yaml
     deps:
-    - .\data\data.csv
+    - data/data.csv
     - params.yaml
     outs:
     - data/clean_data.csv
@@ -13,3 +13,11 @@ stages:
     - params.yaml
     outs:
     - data/transformed_data.csv
+  featureEngineer:
+    cmd: python src/feature_engineer.py data/transformed_data.csv data/top_features.csv
+      params.yaml
+    deps:
+    - data/transformed_data.csv
+    - params.yaml
+    outs:
+    - data/top_features.csv

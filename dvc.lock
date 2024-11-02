@@ -1,9 +1,9 @@
 schema: '2.0'
 stages:
-  preprocess:
-    cmd: python .\src\preprocess.py .\data\data.csv data/clean_data.csv params.yaml
+  prepro:
+    cmd: python src/preprocess.py data/data.csv data/clean_data.csv params.yaml
     deps:
-    - path: .\data\data.csv
+    - path: data/data.csv
       hash: md5
       md5: 801f8030dad1df22a53edfdbfa4e80f0
       size: 29981
@@ -32,3 +32,20 @@ stages:
       hash: md5
       md5: 0fce3f009343ec6b8124f49a43e68042
       size: 50481
+  featureEngineer:
+    cmd: python src/feature_engineer.py data/transformed_data.csv data/top_features.csv
+      params.yaml
+    deps:
+    - path: data/transformed_data.csv
+      hash: md5
+      md5: 0fce3f009343ec6b8124f49a43e68042
+      size: 50481
+    - path: params.yaml
+      hash: md5
+      md5: 81e3bcaa5bc4ec7f0f62f08bb626d79c
+      size: 525
+    outs:
+    - path: data/top_features.csv
+      hash: md5
+      md5: 343ac3b90ab6305ca3f2fd051beb5006
+      size: 361
