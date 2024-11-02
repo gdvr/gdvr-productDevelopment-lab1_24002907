@@ -21,3 +21,8 @@ stages:
     - params.yaml
     outs:
     - data/top_features.csv
+  hiperparameters:
+    cmd: python src/hiperparameters.py data/top_features.csv .\params.yaml
+    deps:
+    - data/top_features.csv
+    - params.yaml

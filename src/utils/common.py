@@ -120,7 +120,8 @@ def hyperparameter_search(model, param_grid, X_train,y_train, cv, search_type):
         search = RandomizedSearchCV(model, param_grid, n_iter=10, cv=cv, scoring='neg_mean_squared_error', n_jobs=-1)
     
     search.fit(X_train, y_train)
-    return search.best_estimator_, -search.best_score_
+    #return search.best_estimator_, -search.best_score_
+    return search
 
 def chooseBestHiperparameters(X_train,y_train, cv, random_state):
     models_and_params = {
@@ -140,14 +141,17 @@ def chooseBestHiperparameters(X_train,y_train, cv, random_state):
     }
 
     best_models = {}
+    best_configs = {}
     for mode in ['grid','random']:
         for model_name, (model, param_grid) in models_and_params.items():
             if(model_name == 'LinearRegression' and mode == 'random'):
-                print('Skip this hiperparameters search')
+                print(f'Skip {mode} search for {model_name}')
                 continue
             print(f"Running search for {model_name} and {mode} search...")
-            best_model, best_score = hyperparameter_search(model, param_grid, X_train,y_train,cv,mode)
+            search = hyperparameter_search(model, param_grid, X_train,y_train,cv,mode)
+            best_model, best_score = search.best_estimator_, -search.best_score_
             best_models[model_name] = (best_model, best_score)
+            best_configs[model_name] = search.best_params_
             print(f"{model_name} best score: {best_score:.4f}")
 
     # Compare models and select the best one
@@ -159,7 +163,7 @@ def chooseBestHiperparameters(X_train,y_train, cv, random_state):
     print(f"\nBest model: {best_model_name} with score: {best_score:.4f}")
     print(f"Best model details:\n{best_model}")
 
-    return best_model
+    return best_configs
 
 def createPreprocesor(categoricals, numerics):
     one_hot_encoder = OneHotEncoder()
