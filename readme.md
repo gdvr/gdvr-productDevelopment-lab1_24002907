@@ -1,5 +1,6 @@
 Para correrlo correctamente se necesita antes de correr el experimento tener el archivo parmas.yaml de la siguiente estructura, el proceso añade secciones aleatorias al archivo por lo cual al momento de volver a correrlo podria romperse la pipeline:
 
+```yaml
 train:
   TEST_SIZE: 0.3
   VALIDATE_SIZE: 0.2
@@ -21,3 +22,4 @@ preprocessing:
   - parking
   - prefarea
   - furnishingstatus
+  ```
