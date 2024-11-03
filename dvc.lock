@@ -58,5 +58,16 @@ stages:
       size: 361
     - path: params.yaml
       hash: md5
-      md5: 855ecc2578abb9286f26d188a8b35edb
-      size: 954
+      md5: 5a941da9ae19a32982a547a5138670c1
+      size: 955
+  train:
+    cmd: python src/train.py data/top_features.csv params.yaml
+    deps:
+    - path: data/top_features.csv
+      hash: md5
+      md5: 343ac3b90ab6305ca3f2fd051beb5006
+      size: 361
+    - path: params.yaml
+      hash: md5
+      md5: 5a941da9ae19a32982a547a5138670c1
+      size: 955

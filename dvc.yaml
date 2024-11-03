@@ -26,3 +26,8 @@ stages:
     deps:
     - data/top_features.csv
     - params.yaml
+  train:
+    cmd: python src/train.py data/top_features.csv params.yaml
+    deps:
+    - data/top_features.csv
+    - params.yaml

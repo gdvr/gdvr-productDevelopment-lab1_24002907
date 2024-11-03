@@ -8,6 +8,12 @@ from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
+models_Def = {
+    "LinearRegression": LinearRegression,
+    "RandomForest": RandomForestRegressor,
+    "GradientBoosting": GradientBoostingRegressor
+}
+
 def splitValuesForModel(X,y, TEST_SIZE, VALIDATE_SIZE,RANDOM_STATE):
     X_train_val, X_test, y_train_val, y_test = train_test_split(X,  y, test_size=TEST_SIZE, random_state=RANDOM_STATE)
     X_train, X_val, y_train, y_val = train_test_split(X_train_val, y_train_val, test_size=VALIDATE_SIZE, random_state=RANDOM_STATE)
@@ -115,12 +121,11 @@ def gb_objective(trial, X_train, y_train, X_val, y_val, random_state):
 
 def hyperparameter_search(model, param_grid, X_train,y_train, cv, search_type):
     if search_type == 'grid':
-        search = GridSearchCV(model, param_grid, cv=cv, scoring='neg_mean_squared_error', n_jobs=-1)
+        search = GridSearchCV(model, param_grid, cv=cv, scoring='r2', n_jobs=-1)
     else:
-        search = RandomizedSearchCV(model, param_grid, n_iter=10, cv=cv, scoring='neg_mean_squared_error', n_jobs=-1)
+        search = RandomizedSearchCV(model, param_grid, n_iter=10, cv=cv, scoring='r2', n_jobs=-1)
     
     search.fit(X_train, y_train)
-    #return search.best_estimator_, -search.best_score_
     return search
 
 def chooseBestHiperparameters(X_train,y_train, cv, random_state):
@@ -149,7 +154,7 @@ def chooseBestHiperparameters(X_train,y_train, cv, random_state):
                 continue
             print(f"Running search for {model_name} and {mode} search...")
             search = hyperparameter_search(model, param_grid, X_train,y_train,cv,mode)
-            best_model, best_score = search.best_estimator_, -search.best_score_
+            best_model, best_score = search.best_estimator_, search.best_score_
             best_models[model_name] = (best_model, best_score)
             best_configs[model_name] = search.best_params_
             print(f"{model_name} best score: {best_score:.4f}")
@@ -158,7 +163,7 @@ def chooseBestHiperparameters(X_train,y_train, cv, random_state):
     best_model_name = min(best_models, key=lambda k: best_models[k][1])
     best_model, best_score = best_models[best_model_name]
 
-    joblib.dump(best_model, f"models/bestModel_{best_model_name}.joblib")
+    joblib.dump(best_model, f"models/bestModel_{best_model_name}.pkl")
 
     print(f"\nBest model: {best_model_name} with score: {best_score:.4f}")
     print(f"Best model details:\n{best_model}")
@@ -175,3 +180,7 @@ def createPreprocesor(categoricals, numerics):
     )
 
     return preprocessor
+
+def createModel(model_name, params):
+    model = models_Def[model_name](**params)
+    return model

@@ -6,38 +6,54 @@ import yaml
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import train_test_split
 
-def train(input_file, model_file, params_file):
-    # Cargar el dataset limpio
-    df = pd.read_csv(input_file)
+from utils.common import createModel
 
-    # Leer los hiperparámetros
-    with open(params_file) as f:
-        params = yaml.safe_load(f)
+def train(input_file,  target):
+    df_features =  pd.read_csv(input_file)
 
-    # Separar características y variable objetivo
-    features = params['preprocessing']['features']
-    target = params['preprocessing']['target']
+    df_training =  pd.read_csv("data/X_train.csv")
+    df_test =  pd.read_csv("data/X_test.csv")
+    df_val =  pd.read_csv("data/X_val.csv")
 
-    X = df[features]
-    y = df[target]
+    features = df_features['feature'].values
 
-    # Dividir en conjuntos de entrenamiento y prueba
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=params['train']['test_size'], random_state=params['train']['random_state']
-    )
+    X_train = df_training.drop(columns=[target], errors='ignore')
+    y_train = df_training[target]
+    X_test = df_test.drop(columns=[target], errors='ignore')
+    y_test = df_test[target]
+    X_val = df_val.drop(columns=[target], errors='ignore')
+    y_val = df_val[target]
+
+    X_train = X_train[features]
+    X_test = X_test[features]
+    X_val = X_val[features]
 
     # Entrenar el modelo
-    model = Ridge(alpha=params['train']['alpha'])
-    model.fit(X_train, y_train)
+    optunaParameters = params['optuna']
+    optimizationParameters = params['optimization']
 
-    # Guardar el modelo entrenado
-    joblib.dump(model, model_file)
-    print(f"Modelo entrenado y guardado en {model_file}")
+    for modelName in optunaParameters:
+        model = createModel(modelName,optunaParameters[modelName])
+        model.fit(X_train, y_train)
+        joblib.dump(model, f"models/{modelName}_optuna.pkl")
+        print(f"Modelo entrenado y guardado en model/{modelName}_optuna.pkl")
+
+    for modelName in optimizationParameters:
+        model = createModel(modelName,optimizationParameters[modelName])
+        model.fit(X_train, y_train)
+        joblib.dump(model, f"models/{modelName}_optimazed.pkl")
+        print(f"Modelo entrenado y guardado en model/{modelName}_optimazed.pkl")
+    
+
+    print(f"Modelos entrenados y guardados")
 
 if __name__ == "__main__":
-    # Argumentos: archivo de entrada, archivo del modelo, archivo de hiperparámetros
     input_file = sys.argv[1]
-    model_file = sys.argv[2]
-    params_file = sys.argv[3]
+    params_file = sys.argv[2]
 
-    train(input_file, model_file, params_file)
+    with open(params_file) as f:
+        params = yaml.safe_load(f)    
+
+    target = params['preprocessing']['target']
+
+    train(input_file, target)
