@@ -8,7 +8,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import Pipeline
 
-def preprocess(input_file,output_file,features, target):        
+def preprocess(input_file,output_file, target):        
     data =  pd.read_csv(input_file)
     features = data.columns
     print(features)
@@ -52,4 +52,4 @@ if __name__ == "__main__":
     target = params['preprocessing']['target']
     
 
-    preprocess(input_file, output_file,features, target)
+    preprocess(input_file, output_file, target)

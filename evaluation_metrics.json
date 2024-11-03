@@ -1,0 +1,44 @@
+{
+    "bestModel_GradientBoosting.pkl": {
+        "MAE": 883256.91,
+        "MSE": 1485043640308.72,
+        "RMSE": 1218623.67,
+        "CV MAE": 886651.17,
+        "R2 Score": 0.51
+    },
+    "GradientBoosting_optimazed.pkl": {
+        "MAE": 882241.24,
+        "MSE": 1483615398781.83,
+        "RMSE": 1218037.52,
+        "CV MAE": 881367.51,
+        "R2 Score": 0.51
+    },
+    "GradientBoosting_optuna.pkl": {
+        "MAE": 914286.18,
+        "MSE": 1576549858383.25,
+        "RMSE": 1255607.37,
+        "CV MAE": 890749.95,
+        "R2 Score": 0.48
+    },
+    "LinearRegression_optimazed.pkl": {
+        "MAE": 836620.92,
+        "MSE": 1208515174057.0,
+        "RMSE": 1099324.87,
+        "CV MAE": 804538.35,
+        "R2 Score": 0.6
+    },
+    "RandomForest_optimazed.pkl": {
+        "MAE": 889780.86,
+        "MSE": 1422111492474.57,
+        "RMSE": 1192523.16,
+        "CV MAE": 852313.95,
+        "R2 Score": 0.53
+    },
+    "RandomForest_optuna.pkl": {
+        "MAE": 936162.85,
+        "MSE": 1558848833391.81,
+        "RMSE": 1248538.68,
+        "CV MAE": 862025.63,
+        "R2 Score": 0.49
+    }
+}

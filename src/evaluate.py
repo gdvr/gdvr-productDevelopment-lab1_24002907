@@ -3,44 +3,52 @@ import pandas as pd
 import joblib
 import json
 import sys
-from sklearn.metrics import mean_squared_error, r2_score
+import os
 
-def evaluate(input_file, model_file, metrics_file, params_file):
-    # Cargar el dataset limpio
-    df = pd.read_csv(input_file)
+from utils.common import evaluateModel, readFolder
 
-    # Leer los parámetros
+def evaluate(feature_file, model_input_file, metrics_file, target):
+    df_features =  pd.read_csv(feature_file)
+    df_test =  pd.read_csv("data/X_test.csv")
+
+    features = df_features['feature'].values
+
+    X_test = df_test.drop(columns=[target], errors='ignore')
+    y_test = df_test[target]
+    X_test = X_test[features]
+
+    rootPath = os.getcwd()
+    models_list = readFolder("models","pkl")
+
+    metrics_output = {}
+    for model_name in models_list:   
+        print(model_name)
+        #We need to concat only the filename because into the readfolder method we change our target path
+        model_fullPath = os.path.join(os.getcwd(),model_name)
+        model = joblib.load(model_fullPath)
+        metrics = evaluateModel(model,X_test,y_test,params['train']['CV'])
+        metrics_output[model_name] = metrics
+    
+    os.chdir(rootPath)   # Restore the base root path
+
+    # Guardar métricas en un archivo JSON
+    with open(metrics_file, 'w') as f:
+        json.dump(metrics_output, f, indent=4)
+
+    print(f"Métricas guardadas en {metrics_file}")
+   
+    
+
+if __name__ == "__main__":
+    feature_input_file = sys.argv[1]
+    #model_folder = sys.argv[2]
+    metrics_file = sys.argv[2]
+    params_file = sys.argv[3]
+
     import yaml
     with open(params_file) as f:
         params = yaml.safe_load(f)
 
-    # Separar características y variable objetivo
-    features = params['preprocessing']['features']
     target = params['preprocessing']['target']
 
-    X = df[features]
-    y = df[target]
-
-    # Cargar el modelo entrenado
-    model = joblib.load(model_file)
-
-    # Realizar predicciones
-    predictions = model.predict(X)
-
-    # Calcular métricas
-    mse = mean_squared_error(y, predictions)
-    r2 = r2_score(y, predictions)
-
-    # Guardar métricas en un archivo JSON
-    with open(metrics_file, 'w') as f:
-        json.dump({'mse': mse, 'r2': r2}, f, indent=4)
-    print(f"Métricas guardadas en {metrics_file}")
-
-if __name__ == "__main__":
-    # Argumentos: archivo de entrada, archivo del modelo, archivo de métricas, archivo de parámetros
-    input_file = sys.argv[1]
-    model_file = sys.argv[2]
-    metrics_file = sys.argv[3]
-    params_file = sys.argv[4]
-
-    evaluate(input_file, model_file, metrics_file, params_file)
+    evaluate(feature_input_file, "", metrics_file, target)

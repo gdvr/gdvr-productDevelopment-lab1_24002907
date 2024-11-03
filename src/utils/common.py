@@ -6,8 +6,11 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, cross_val_score
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error, precision_score,f1_score, accuracy_score
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error, precision_score,f1_score, accuracy_score, recall_score
+from sklearn.base import is_classifier, is_regressor
 import numpy as np
+import os
+
 
 models_Def = {
     "LinearRegression": LinearRegression,
@@ -187,24 +190,44 @@ def createModel(model_name, params):
     return model
 
 def evaluateModel(model, x, y, cv):
-    y_predict = model.predict(x)
-    mae = mean_absolute_error(y, y_predict)
-    mse = mean_squared_error(y, y_predict)
-    rmse = np.sqrt(mse)
-    scores = cross_val_score(model, x,y, cv=cv, scoring='neg_mean_absolute_error')
-    accuracy = accuracy_score(y, y_predict)
-    precision = precision_score(y, y_predict)
-    f1 = f1_score(y, y_predict)
-
-    return {
-        'MAE': round(mae,2),
-        'MSE': round(mse,2),
-        'RMSE': round(rmse,2),
-        'CV MAE': round(-np.mean(scores),2),
-        'R2 Score': round(r2_score(y, y_predict),2),
-        'Accuracy': round(accuracy,2),
-        'Precision': round(precision,2),
-        'F1Score': round(f1,2),
-    }
-
+    if is_classifier(model):
+        y_predict = model.predict(x)
+        accuracy = accuracy_score(y, y_predict)
+        precision = precision_score(y, y_predict, average='weighted')
+        recall = recall_score(y, y_predict, average='weighted')
+        f1 = f1_score(y, y_predict, average='weighted')
+        scores = cross_val_score(model, x, y, cv=cv, scoring='accuracy')
         
+        return {
+            'Accuracy': round(accuracy, 2),
+            'Precision': round(precision, 2),
+            'Recall': round(recall, 2),
+            'F1Score': round(f1, 2),
+            'CV Accuracy': round(np.mean(scores), 2)
+        }
+    elif is_regressor(model):
+        y_predict = model.predict(x)
+        mae = mean_absolute_error(y, y_predict)
+        mse = mean_squared_error(y, y_predict)
+        rmse = np.sqrt(mse)
+        scores = cross_val_score(model, x,y, cv=cv, scoring='neg_mean_absolute_error')
+        r2 = r2_score(y, y_predict)
+
+        return {
+            'MAE': round(mae, 2),
+            'MSE': round(mse, 2),
+            'RMSE': round(rmse, 2),
+            'CV MAE': round(-np.mean(scores), 2),
+            'R2 Score': round(r2, 2)
+        }
+    else:
+        raise ValueError("Model type not supported. Please provide a classification or regression model.")
+
+def readFolder(path, extension):
+    print(path)
+    data = []
+    os.chdir(path)
+    for file in os.listdir():
+        if file.endswith(f".{extension}"):
+            data.append(file)
+    return data
