@@ -4,9 +4,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV, cross_val_score
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error, precision_score,f1_score, accuracy_score
+import numpy as np
 
 models_Def = {
     "LinearRegression": LinearRegression,
@@ -184,3 +185,26 @@ def createPreprocesor(categoricals, numerics):
 def createModel(model_name, params):
     model = models_Def[model_name](**params)
     return model
+
+def evaluateModel(model, x, y, cv):
+    y_predict = model.predict(x)
+    mae = mean_absolute_error(y, y_predict)
+    mse = mean_squared_error(y, y_predict)
+    rmse = np.sqrt(mse)
+    scores = cross_val_score(model, x,y, cv=cv, scoring='neg_mean_absolute_error')
+    accuracy = accuracy_score(y, y_predict)
+    precision = precision_score(y, y_predict)
+    f1 = f1_score(y, y_predict)
+
+    return {
+        'MAE': round(mae,2),
+        'MSE': round(mse,2),
+        'RMSE': round(rmse,2),
+        'CV MAE': round(-np.mean(scores),2),
+        'R2 Score': round(r2_score(y, y_predict),2),
+        'Accuracy': round(accuracy,2),
+        'Precision': round(precision,2),
+        'F1Score': round(f1,2),
+    }
+
+        
