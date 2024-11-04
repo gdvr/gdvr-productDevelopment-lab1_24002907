@@ -14,7 +14,6 @@ def searchHiperparameters(input_file,target):
     df_val =  pd.read_csv("data/X_val.csv")
 
     features = df_features['feature'].values
-    print(features)
 
     X_train = df_training.drop(columns=[target], errors='ignore')
     y_train = df_training[target]

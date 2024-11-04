@@ -3,12 +3,11 @@ import pandas as pd
 import joblib
 import sys
 import yaml
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import train_test_split
+import os
 
 from utils.common import createModel
 
-def train(input_file,  target):
+def train(input_file, output_file,  target):
     df_features =  pd.read_csv(input_file)
 
     df_training =  pd.read_csv("data/X_train.csv")
@@ -32,28 +31,37 @@ def train(input_file,  target):
     optunaParameters = params['optuna']
     optimizationParameters = params['optimization']
 
+    os.makedirs('models', exist_ok=True)
+
+    models = []
+
     for modelName in optunaParameters:
         model = createModel(modelName,optunaParameters[modelName])
         model.fit(X_train, y_train)
         joblib.dump(model, f"models/{modelName}_optuna.pkl")
+        models.append(f"models/{modelName}_optuna.pkl")
         print(f"Modelo entrenado y guardado en model/{modelName}_optuna.pkl")
 
     for modelName in optimizationParameters:
         model = createModel(modelName,optimizationParameters[modelName])
         model.fit(X_train, y_train)
         joblib.dump(model, f"models/{modelName}_optimazed.pkl")
+        models.append(f"models/{modelName}_optimazed.pkl")
         print(f"Modelo entrenado y guardado en model/{modelName}_optimazed.pkl")
     
 
+    df_models = pd.DataFrame({"model_name": models})
+    df_models.to_csv(output_file, index=False)
     print(f"Modelos entrenados y guardados")
 
 if __name__ == "__main__":
     input_file = sys.argv[1]
-    params_file = sys.argv[2]
+    output_file = sys.argv[2]
+    params_file = sys.argv[3]
 
     with open(params_file) as f:
         params = yaml.safe_load(f)    
 
     target = params['preprocessing']['target']
 
-    train(input_file, target)
+    train(input_file, output_file, target)

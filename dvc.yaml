@@ -27,7 +27,15 @@ stages:
     - data/top_features.csv
     - params.yaml
   train:
-    cmd: python src/train.py data/top_features.csv params.yaml
+    cmd: python src/train.py data/top_features.csv data/models.csv params.yaml
     deps:
     - data/top_features.csv
     - params.yaml
+  evaluate:
+    cmd: python src/evaluate.py data/top_features.csv data/results.csv evaluation_metrics.json
+      params.yaml
+    deps:
+    - data/top_features.csv
+    - params.yaml
+    outs:
+    - data/results.csv

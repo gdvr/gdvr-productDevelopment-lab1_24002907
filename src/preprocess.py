@@ -37,9 +37,4 @@ if __name__ == "__main__":
     features = params['preprocessing']['features']
     target = params['preprocessing']['target']
 
-    try:
-        preprocess(input_file, output_file, features, target)
-        sys.exit(0)  # Success
-    except Exception as e:
-        print(f"An error occurred during preprocessing: {e}")
-        sys.exit(1)  # Error
+    preprocess(input_file, output_file, features, target)

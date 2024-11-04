@@ -8,8 +8,6 @@ from utils.common import  createPreprocesor, splitValuesForModel
 def transform(input_file, output_file, features, target):
     df = pd.read_csv(input_file)
 
-    print(target,"target")
-
     numericas = params['continuas'] + params['discretas'] 
     categoricas = params['categoricas']   
 
@@ -21,9 +19,8 @@ def transform(input_file, output_file, features, target):
 
     num_features = preprocessor.transformers_[0][2]
     cat_features = preprocessor.transformers_[1][1].get_feature_names_out(categoricas)
-    all_feature_names = list(num_features) + list(cat_features)
+    all_feature_names = list(num_features) + list(cat_features)    
     
-    print(all_feature_names)
     X_transformed_df = pd.DataFrame(X_transformed, columns=all_feature_names)
     final_dataset = pd.concat([X_transformed_df, y.reset_index(drop=True)], axis=1)
     final_dataset.to_csv(output_file, index=False)
