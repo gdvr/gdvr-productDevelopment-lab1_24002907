@@ -18,6 +18,9 @@ dvc stage add -n evaluate -d data/top_features.csv -d params.yaml -o data/result
 
 * Si existe un incoveniente en ejecutar la pipeline por favor verificar el archivo readme.md donde se menciona consideraciones generales para procesar la pipeline.
 
+### Github Release
+https://github.com/gdvr/gdvr-productDevelopment-lab1_24002907/releases/tag/v1.0.2
+
 ### Ejecucion
 * git init
 * dvc pull -f (si en dado caso falla el comando, colocar el archivo BK\data.csv manualmente en la carpeta data)
