@@ -36,12 +36,12 @@ categoricas:
 - furnishingstatus
 optuna:
   RandomForest:
-    n_estimators: 185
+    n_estimators: 200
     max_depth: 15
     min_samples_split: 2
   GradientBoosting:
-    learning_rate: 0.2717814133962777
-    n_estimators: 77
+    learning_rate: 0.09499500119396612
+    n_estimators: 296
     max_depth: 3
 optimization:
   RandomForest:
@@ -49,8 +49,8 @@ optimization:
     min_samples_split: 10
     max_depth: null
   GradientBoosting:
-    n_estimators: 100
+    n_estimators: 50
     max_depth: 3
-    learning_rate: 0.2
+    learning_rate: 0.1
   LinearRegression:
     fit_intercept: false
