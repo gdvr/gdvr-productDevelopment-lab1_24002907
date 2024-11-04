@@ -1,0 +1,4 @@
+[core]
+    remote = simulated_remote
+['remote "simulated_remote"']
+    url = ../simulated_remote
