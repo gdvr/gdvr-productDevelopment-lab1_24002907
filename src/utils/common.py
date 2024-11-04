@@ -69,7 +69,6 @@ def __get_variables_scale_type(dataset):
     discretas = []
 
     for col in columnas:
-        print(col)
         col_type=dataset[col].dtype
         
         if(col_type == 'object' or col_type == 'category'):
@@ -224,7 +223,6 @@ def evaluateModel(model, x, y, cv):
         raise ValueError("Model type not supported. Please provide a classification or regression model.")
 
 def readFolder(path, extension):
-    print(path)
     data = []
     os.chdir(path)
     for file in os.listdir():

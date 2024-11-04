@@ -1,5 +1,6 @@
-Para correrlo correctamente se necesita antes de correr el experimento tener el archivo parmas.yaml de la siguiente estructura, el proceso añade secciones aleatorias al archivo por lo cual al momento de volver a correrlo podria romperse la pipeline:
+Para correr la pipeline se necesita antes de correr el experimento tener el archivo parmas.yaml de la siguiente estructura, el proceso añade secciones dinamicas al archivo por lo cual al momento de volver a correrlo podria romperse la pipeline:
 
+### Version inicial del params.yaml
 ```yaml
 train:
   TEST_SIZE: 0.3
@@ -23,3 +24,6 @@ preprocessing:
   - prefarea
   - furnishingstatus
   ```
+
+### Comandos
+dvc repro -f

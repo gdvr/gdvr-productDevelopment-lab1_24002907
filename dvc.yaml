@@ -32,10 +32,10 @@ stages:
     - data/top_features.csv
     - params.yaml
   evaluate:
-    cmd: python src/evaluate.py data/top_features.csv evaluation_metrics.json params.yaml
+    cmd: python src/evaluate.py data/top_features.csv data/results.csv evaluation_metrics.json
+      params.yaml
     deps:
     - data/top_features.csv
     - params.yaml
-    - models/
     outs:
-    - evaluation_metrics.json
+    - data/results.csv

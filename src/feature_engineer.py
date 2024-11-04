@@ -11,7 +11,6 @@ from sklearn.pipeline import Pipeline
 def preprocess(input_file,output_file, target):        
     data =  pd.read_csv(input_file)
     features = data.columns
-    print(features)
 
     X = data.drop(columns=[target], errors='ignore')
     y = data[target]
